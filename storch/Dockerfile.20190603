@@ -1,0 +1,9 @@
+FROM nvidia/cuda:10.1-base-ubuntu18.04
+# Installing python3-pip will unfortunately pull in python3.6 too, but such is life
+RUN apt-get update && \
+    apt-get install -qy --no-install-recommends python3-pip python3.7-dev && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 1 && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN python3.7 -m pip install --no-cache -U pip wheel setuptools
+# This step will take a while; the torch package is over 600 megs
+RUN python3.7 -m pip install --no-cache -U torch==1.1.0 torchvision-nightly==0.2.3
